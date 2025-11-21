@@ -1,55 +1,55 @@
 const CACHE_NAME = 'hymnary-cache-v1';
+
+// --- CORREÇÃO PWA GITHUB PAGES: Defina o caminho base do seu projeto ---
+// Seu projeto está na subpasta 'hbj'.
+const BASE_PATH = '/hbj/';
+
 const urlsToCache = [
-    './',
-    './index.html',
-    './manifest.json',
-    './icon-192x192.png', // Exemplo de ícone, ajuste o nome conforme seu arquivo real
-    'https://cdn.tailwindcss.com', // Tailwind CSS para funcionar offline
+    BASE_PATH, // Garante que a raiz do projeto (index.html) seja cacheadas corretamente
+    BASE_PATH + 'index.html',
+    BASE_PATH + 'manifest.json',
+    BASE_PATH + 'icon-192x192.png',
+    'https://cdn.tailwindcss.com', 
 ];
 
 self.addEventListener('install', event => {
-    // Garante que o Service Worker não será instalado até que todos os arquivos estejam em cache
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                console.log('Cache aberto');
-                // Adiciona todos os recursos necessários ao cache
-                return cache.addAll(urlsToCache);
-            })
-            // Adiciona uma chamada para forçar o novo SW a se tornar ativo imediatamente
-            .then(() => self.skipWaiting()) 
-    );
+    // ... (o restante do código de instalação e cache continua o mesmo)
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('Cache aberto');
+                return cache.addAll(urlsToCache);
+            })
+            .then(() => self.skipWaiting()) 
+    );
 });
 
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Retorna o recurso do cache, se encontrado
-                if (response) {
-                    return response;
-                }
-                // Se não estiver no cache, faz a requisição normal
-                return fetch(event.request);
-            })
-    );
+    // ... (o restante do código de fetch continua o mesmo)
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                if (response) {
+                    return response;
+                }
+                return fetch(event.request);
+            })
+    );
 });
 
-// Este bloco ajuda a garantir que os usuários sempre vejam a versão mais recente
 self.addEventListener('activate', event => {
-    const cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
-        // Remove caches antigos que não estão na lista branca (ex: 'hymnary-cache-v0')
-        caches.keys().then(cacheNames => {
-            return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
-                    }
-                })
-            );
-        })
-    );
-    // Força o Service Worker ativo a assumir o controle dos clientes imediatamente
-    return self.clients.claim();
+    // ... (o restante do código de activate continua o mesmo)
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
+    return self.clients.claim();
 });
