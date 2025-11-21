@@ -1,0 +1,22 @@
+{
+  "name": "IAP HBJ Hinário",
+  "short_name": "Hinário IAP HBJ",
+  "description": "Hinário digital da Igreja Adventista da Promessa (HBJ) para acesso rápido e offline.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff8e1",
+  "theme_color": "#a1887f",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
