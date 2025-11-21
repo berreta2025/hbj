@@ -209,9 +209,14 @@
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
             // 2. Detecta um WebView (pode ser 'wv' no Chrome ou uma string personalizada)
-            const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('Mobile') && !navigator.userAgent.includes('Safari');
+            // --- AJUSTE WEBVIEW ---
+            // Adiciona a detecção de WebView mais comum no Android, garantindo que não seja Safari (iOS)
+            const isWebView = navigator.userAgent.includes('wv') || (navigator.userAgent.includes('Mobile') && !navigator.userAgent.includes('Safari'));
             
-            return isStandalone || isWebView;
+            // Tenta detectar se o app está rodando em um navegador móvel, mas sem o prompt de instalação
+            const isRunningInApp = isStandalone || isWebView || (document.referrer.includes('android-app://') || document.referrer.includes('ios-app://'));
+
+            return isRunningInApp;
         }
 
         // --- FUNÇÕES DE FAVORITOS ---
@@ -426,7 +431,11 @@
         window.onload = function() {
             // PWA Service Worker Registration
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('./service-worker.js')
+                // --- CORREÇÃO PWA GITHUB PAGES ---
+                // Registra o Service Worker, definindo o escopo explícito para a subpasta do GitHub Pages (/hbj/)
+                navigator.serviceWorker.register('./service-worker.js', { 
+                    scope: '/hbj/' // MUDE ISTO!
+                })
                     .then(reg => console.log('Service Worker Registrado', reg))
                     .catch(err => console.error('Erro ao registrar Service Worker', err));
             }
