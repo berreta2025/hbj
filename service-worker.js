@@ -1,16 +1,15 @@
 const CACHE_NAME = 'hymnary-cache-v1';
 
-// --- CORREÇÃO PWA GITHUB PAGES: Defina o caminho base do seu projeto ---
-// Seu projeto está na subpasta 'hbj'.
-const BASE_PATH = '/hbj/';
+// O caminho base é a URL do seu subdiretório no GitHub Pages
+const BASE_PATH = '/hbj/'; 
 
 const urlsToCache = [
-    BASE_PATH, // Garante que a raiz do projeto (index.html) seja cacheadas corretamente
-    BASE_PATH + 'index.html',
-    BASE_PATH + 'manifest.json',
-    BASE_PATH + 'icon-192.png',
-    BASE_PATH + 'icon-512.png',
-    'https://cdn.tailwindcss.com', 
+    BASE_PATH,
+    BASE_PATH + 'index.html',
+    BASE_PATH + 'manifest.json',
+    BASE_PATH + 'icon-192.png', // <<-- AGORA ESTÁ CERTO!
+    BASE_PATH + 'icon-512.png',     // <<-- ADICIONE ESSE TAMBÉM!
+    'https://cdn.tailwindcss.com', 
 ];
 
 self.addEventListener('install', event => {
@@ -54,4 +53,5 @@ self.addEventListener('activate', event => {
     );
     return self.clients.claim();
 });
+
 
